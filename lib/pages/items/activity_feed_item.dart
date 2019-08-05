@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:go_feed/model/activity.dart';
 
 class ActivityFeedItem extends StatefulWidget {
@@ -20,19 +19,6 @@ class ActivityFeedItem extends StatefulWidget {
 }
 
 class _ActivityFeedItemState extends State<ActivityFeedItem> {
-
-  @override
-  void initState() {
-    final activity = widget.activity;
-
-    if (activity.location != null) {
-      Geocoder.local
-              .findAddressesFromCoordinates(Coordinates(activity.location.x, activity.location.y))
-              .then((a) => setState(() => activity.address = a.first.addressLine))
-              .catchError((e) => print("Could not reverse geocode (Lat ${activity.location.x}, Lng ${activity.location.y}): ${e}"));
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

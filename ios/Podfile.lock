@@ -1,7 +1,5 @@
 PODS:
   - Flutter (1.0.0)
-  - geocoder (0.0.1):
-    - Flutter
   - GoogleMaps (2.7.0):
     - GoogleMaps/Maps (= 2.7.0)
   - GoogleMaps/Base (2.7.0)
@@ -12,7 +10,6 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
-  - geocoder (from `.symlinks/plugins/geocoder/ios`)
   - GoogleMaps
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
 
@@ -23,14 +20,11 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: ".symlinks/flutter/ios"
-  geocoder:
-    :path: ".symlinks/plugins/geocoder/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
 
 SPEC CHECKSUMS:
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
-  geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
 

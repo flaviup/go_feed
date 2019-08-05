@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    LocationPicker.initApiKey("AIzaSyCqtEXXhJgwJYyqWSYZmpGtZNioAitXtwA");
+    LocationPicker.initApiKey("AIzaSyDxyDEDicGA49BeD1El-8k0mwdmaegQVf0");
   }
 
   @override

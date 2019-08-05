@@ -109,8 +109,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
       activity = v;
       if (activity.fullName?.isNotEmpty &&
           activity.description?.isNotEmpty &&
-          activity.when != null &&
-          activity.location != null) {
+          activity.when != null) {
         _activityFeedModel.insert(0, activity);
       }
     });
