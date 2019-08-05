@@ -5,14 +5,35 @@ import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as TimeAgo;
 
 class Activity {
-  Activity({id, this.avatarUrl, this.fullName, this.when, this.description, this.location, String address = "",}) {
+
+  Activity({id, this.avatarUrl, this.fullName, this.when, this.description, this.location, String address = "",}) :
+        _address = address ?? "" {
     if (id == null || id.isEmpty) {
       _id = Uuid().v4().toString();
     } else {
       _id = id;
     }
-    _address = address ?? "";
   }
+
+  Activity.fromJson(@required Map<String, dynamic> json)
+      : assert(json != null),
+        _id = json["id"],
+        avatarUrl = json["avatarUrl"],
+        fullName = json["fullName"],
+        when = DateTime.parse(json["when"]),
+        description = json["description"],
+        location = Point(json["location"][0], json["location"][1]),
+        _address = json["address"];
+
+  Map<String, dynamic> toJson() => {
+        "id" : id,
+        "avatarUrl" : avatarUrl,
+        "fullName" : fullName,
+        "when" : when.toUtc().toIso8601String(),
+        "description" : description,
+        "location" : [location.x, location.y],
+        "address" : address,
+  };
 
   String _id;
   String get id => _id;
@@ -27,6 +48,7 @@ class Activity {
   set address(String value) {
     _address = value;
   }
+
   ImageProvider<dynamic> get avatarImage => getImage(avatarUrl);
   String get timeAgo => TimeAgo.format(when.toLocal());
 

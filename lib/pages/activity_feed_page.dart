@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:go_feed/model/activity.dart';
 import 'package:go_feed/pages/activity_detail_page.dart';
 import 'package:go_feed/pages/items/activity_feed_item.dart';
@@ -24,10 +26,23 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
   void initState() {
     super.initState();
 
-    _activityFeedModel = ActivityFeedModel(
+    /*_activityFeedModel = ActivityFeedModel(
       listKey: _listKey,
       initialActivities: <Activity>[Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488))],
-    );
+    );*/
+    _activityFeedModel = ActivityFeedModel(listKey: _listKey);
+
+    rootBundle.loadString("assets/activities.json").then((text) {
+      if (text?.isNotEmpty) {
+        if (mounted) {
+          final json = jsonDecode(text);
+
+          setState(() {
+            _activityFeedModel = ActivityFeedModel.fromJson(listKey: _listKey, json: json);
+          });
+        }
+      }
+    });
   }
 
   @override

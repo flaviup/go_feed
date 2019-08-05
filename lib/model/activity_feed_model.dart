@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_feed/model/activity.dart';
 
 class ActivityFeedModel {
+
   ActivityFeedModel({@required this.listKey, Iterable<Activity> initialActivities,}) :
         assert(listKey != null),
         _activities = List<Activity>.from(initialActivities ?? <Activity>[]);
+
+  ActivityFeedModel.fromJson({@required this.listKey, @required Map<String, dynamic> json})
+      : assert(listKey != null),
+        assert(json != null),
+        _activities = json["activities"];
+
+  Map<String, dynamic> toJson() => {
+    "activities" : _activities.map((a) => a.toJson()).toList(growable: false),
+  };
 
   final GlobalKey<AnimatedListState> listKey;
   final List<Activity> _activities;
