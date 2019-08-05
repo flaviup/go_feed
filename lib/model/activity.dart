@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:timeago/timeago.dart' as TimeAgo;
 
 class Activity {
   Activity({this.avatarUrl, this.fullName, this.when, this.description, this.location, });
@@ -14,4 +15,6 @@ class Activity {
   set address(String value) {
     _address = value;
   }
+
+  String get timeAgo => TimeAgo.format(when.toLocal());
 }

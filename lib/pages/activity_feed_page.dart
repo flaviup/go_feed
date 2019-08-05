@@ -34,7 +34,13 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(letterSpacing: 1),),
+        title: Text(
+          widget.title,
+          semanticsLabel: "Page title: ${widget.title}",
+          style: TextStyle(
+            letterSpacing: 1,
+          ),
+        ),
       ),
       body: Container(
         child: AnimatedList(
@@ -51,14 +57,14 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
                 });
                 final activity = _activityFeedModel[index];
                 Navigator.of(context)
-                    .push(MaterialPageRoute<void>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
+                    .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
                     .then((v) {
+                  final activity = v;
                   if (activity.fullName?.isNotEmpty &&
                       activity.description?.isNotEmpty &&
                       activity.when != null &&
                       activity.location != null) {
-                    setState(() {
-                    });
+                      _activityFeedModel[index] = activity;
                   }
                 });
               },

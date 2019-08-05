@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_feed/model/activity.dart';
 
 class ActivityFeedModel {
-  ActivityFeedModel({@required this.listKey, Iterable<Activity> initialActivities, }) :
+  ActivityFeedModel({@required this.listKey, Iterable<Activity> initialActivities,}) :
         assert(listKey != null),
         _activities = List<Activity>.from(initialActivities ?? <Activity>[]);
 
@@ -19,6 +19,11 @@ class ActivityFeedModel {
   int get length => _activities.length;
 
   Activity operator [](int index) => _activities[index];
+  operator []=(int index, Activity activity) {
+    _animatedList.setState(() {
+      _activities[index] = activity;
+    });
+  }
 
   int indexOf(Activity activity) => _activities.indexOf(activity);
 }

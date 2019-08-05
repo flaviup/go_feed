@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - geocoder (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `.symlinks/flutter/ios`)
+  - geocoder (from `.symlinks/plugins/geocoder/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  geocoder:
+    :path: ".symlinks/plugins/geocoder/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
+
+PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5
+
+COCOAPODS: 1.6.1

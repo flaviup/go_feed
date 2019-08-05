@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_feed/model/activity.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:timeago/timeago.dart' as TimeAgo;
 
 class ActivityFeedItem extends StatefulWidget {
 
@@ -70,6 +69,7 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                               children: <Widget>[
                                 Text(
                                   activity.fullName,
+                                  semanticsLabel: "Full name ${activity.fullName}",
                                   style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 20,
@@ -88,6 +88,7 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                                   padding: EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     activity.address,
+                                    semanticsLabel: "Location ${activity.address}",
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -95,7 +96,8 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                                   ),
                                 ),
                                 Text(
-                                  TimeAgo.format(activity.when.toLocal()),
+                                  activity.timeAgo,
+                                  semanticsLabel: "Time ${activity.timeAgo}",
                                   style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 12,
@@ -112,6 +114,7 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
                           activity.description,
+                          semanticsLabel: "Description ${activity.description}",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
