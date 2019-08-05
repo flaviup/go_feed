@@ -10,6 +10,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="go_feed"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value=""/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -28,6 +31,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name="io.flutter.plugins.LocationPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
         </activity>
     </application>
 </manifest>
