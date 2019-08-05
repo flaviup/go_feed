@@ -5,12 +5,13 @@ import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as TimeAgo;
 
 class Activity {
-  Activity({id, this.avatarUrl, this.fullName, this.when, this.description, this.location, }) {
+  Activity({id, this.avatarUrl, this.fullName, this.when, this.description, this.location, String address = "",}) {
     if (id == null || id.isEmpty) {
       _id = Uuid().v4().toString();
     } else {
       _id = id;
     }
+    _address = address ?? "";
   }
 
   String _id;

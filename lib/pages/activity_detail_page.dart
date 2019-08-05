@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:image_picker/image_picker.dart';
 import 'package:go_feed/model/activity.dart';
+import 'package:go_feed/location_picker/location_picker.dart';
 
 class ActivityDetailPage extends StatefulWidget {
 
@@ -26,8 +28,10 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   String _avatarUrl;
   String _fullName;
   String _description;
+  String _address;
 
   String _retrieveImageDataError;
+  Map<dynamic, dynamic> _locationData;
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     _avatarUrl = widget.activity.avatarUrl;
     _fullName = widget.activity.fullName;
     _description = widget.activity.description;
+    _address = widget.activity.address;
   }
 
   @override
@@ -71,28 +76,72 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                     height: 20,
                     color: Colors.transparent,
                   ),
-                  InkWell(
-                    child: Hero(
-                      tag: "heroImage${activity.id}",
-                      child: CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.blueGrey,
-                        backgroundImage: Activity.getImage(_avatarUrl),
-                      ),
-                    ),
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            color: Colors.white,
-                            height: 120,
-                            child: _buildBottomNavigationMenu(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      InkWell(
+                        child: Hero(
+                          tag: "heroImage${activity.id}",
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.blueGrey,
+                            backgroundImage: Activity.getImage(_avatarUrl),
+                          ),
+                        ),
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                color: Colors.white,
+                                height: 120,
+                                child: _buildBottomNavigationMenu(),
+                              );
+                            },
+                            backgroundColor: Colors.white,
                           );
                         },
-                        backgroundColor: Colors.white,
-                      );
-                    },
+                      ),
+                      Container(
+                        width: 8,
+                        color: Colors.transparent,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            if (!widget.readOnly) RaisedButton(
+                              color: Colors.blue,
+                              focusElevation: 4,
+                              highlightElevation: 4,
+                              child: Text(
+                                "PICK LOCATION",
+                                semanticsLabel: "Pick location button",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: ButtonRadius,
+                              ),
+                              onPressed: _showLocationPicker,
+                            ),
+                            if (_address?.isNotEmpty) Text(
+                              _address,
+                              semanticsLabel: "Location ${_address}",
+                              style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 14,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   Divider(
                     height: 20,
@@ -101,11 +150,13 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                   TextFormField(
                     initialValue: _fullName,
                     maxLines: 1,
+                    maxLength: 200,
+                    maxLengthEnforced: true,
                     readOnly: widget.readOnly,
                     decoration: InputDecoration(
                       isDense: false,
                       alignLabelWithHint: true,
-                      labelText: 'Full name',
+                      labelText: "Full name",
                       border: FieldBorder,
                       enabledBorder: FieldBorder,
                       hintText: "Enter your full name",
@@ -117,6 +168,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                         fontWeight: FontWeight.w400,
                         letterSpacing: 1,
                       ),
+                      counterText: "",
                     ),
                     validator: (v) {
                       if (v.trim().isEmpty) return "Empty name.";
@@ -128,11 +180,13 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                   TextFormField(
                     initialValue: _description,
                     maxLines: 10,
+                    maxLength: 2000,
+                    maxLengthEnforced: true,
                     readOnly: widget.readOnly,
                     decoration: InputDecoration(
                       isDense: false,
                       alignLabelWithHint: true,
-                      labelText: 'Description',
+                      labelText: "Description",
                       border: FieldBorder,
                       enabledBorder: FieldBorder,
                       hintText: "Describe your activity",
@@ -188,7 +242,12 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                             fullName: _fullName,
                             when: DateTime.now().toUtc(),
                             description: _description,
-                            location: Point(0, 0),
+                            location: (_locationData != null &&
+                                       _locationData.containsKey("latitude") &&
+                                       _locationData.containsKey("longitude")) ?
+                                        Point(_locationData["latitude"], _locationData["longitude"]) :
+                                        activity.location,
+                            address: _address,
                           ),
                         );
                       }
@@ -261,5 +320,30 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
         ),
       ],
     );
+  }
+
+  void _showLocationPicker() async {
+    final initLocation = widget.activity.location;
+    final picker = LocationPicker(
+      initialLat: initLocation?.x ?? 0,
+      initialLong: initLocation?.y ?? 0,
+    );
+    Map<dynamic, dynamic> result = null;
+
+    try {
+      result = await picker.showLocationPicker;
+    } on PlatformException {
+    }
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted || result == null)
+      return;
+
+    setState(() {
+      _locationData = result;
+
+      if (result.containsKey("line0")) _address = result["line0"];
+    });
   }
 }

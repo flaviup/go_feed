@@ -2,13 +2,23 @@ PODS:
   - Flutter (1.0.0)
   - geocoder (0.0.1):
     - Flutter
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
   - image_picker (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
   - geocoder (from `.symlinks/plugins/geocoder/ios`)
+  - GoogleMaps
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - GoogleMaps
 
 EXTERNAL SOURCES:
   Flutter:
@@ -21,8 +31,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
 
-PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5
+PODFILE CHECKSUM: b801842348ca7861215b440a4e89f2df7900c07b
 
 COCOAPODS: 1.6.1

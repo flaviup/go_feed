@@ -76,7 +76,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewActivity(context),
-        tooltip: 'Add new activity',
+        tooltip: "Add new activity",
         child: Icon(Icons.add),
       ),
     );

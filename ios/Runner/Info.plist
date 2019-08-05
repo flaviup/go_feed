@@ -32,6 +32,8 @@
     <string>Used to capture audio for avatar image.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Used to pick an avatar image.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Go needs to access your location.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
