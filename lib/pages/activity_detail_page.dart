@@ -36,7 +36,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Activity Detail"),
+        title: Text("Activity Detail", style: TextStyle(letterSpacing: 1),),
       ),
       body: Form(
         key: _formKey,

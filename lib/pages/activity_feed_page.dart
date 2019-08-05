@@ -34,7 +34,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title, style: TextStyle(letterSpacing: 1),),
       ),
       body: Container(
         child: AnimatedList(
