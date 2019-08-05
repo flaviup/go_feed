@@ -1,11 +1,20 @@
 import 'dart:math';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as TimeAgo;
 
 class Activity {
-  Activity({this.avatarUrl, this.fullName, this.when, this.description, this.location, });
+  Activity({id, this.avatarUrl, this.fullName, this.when, this.description, this.location, }) {
+    if (id == null || id.isEmpty) {
+      _id = Uuid().v4().toString();
+    } else {
+      _id = id;
+    }
+  }
 
+  String _id;
+  String get id => _id;
   final String avatarUrl;
   final String fullName;
   final DateTime when;

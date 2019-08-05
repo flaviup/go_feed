@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -73,10 +72,13 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                     color: Colors.transparent,
                   ),
                   InkWell(
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.blueGrey,
-                      backgroundImage: Activity.getImage(_avatarUrl),
+                    child: Hero(
+                      tag: "heroImage${activity.id}",
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.blueGrey,
+                        backgroundImage: Activity.getImage(_avatarUrl),
+                      ),
                     ),
                     onTap: () {
                       showModalBottomSheet(
@@ -181,6 +183,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                         Navigator.pop(
                           context,
                           Activity(
+                            id: activity.id,
                             avatarUrl: _avatarUrl,
                             fullName: _fullName,
                             when: DateTime.now().toUtc(),

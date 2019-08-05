@@ -57,10 +57,13 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(right: 8),
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.blueGrey,
-                              backgroundImage: activity.avatarImage,
+                            child: Hero(
+                              tag: "heroImage${activity.id}",
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.blueGrey,
+                                backgroundImage: activity.avatarImage,
+                              ),
                             ),
                           ),
                           Expanded(
