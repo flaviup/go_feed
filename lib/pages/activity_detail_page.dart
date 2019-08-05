@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:go_feed/model/activity.dart';
 
 class ActivityDetailPage extends StatefulWidget {
@@ -22,12 +24,16 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   static final FieldBorder = OutlineInputBorder(gapPadding: 6, borderRadius: FieldRadius);
   static final ButtonRadius = BorderRadius.circular(20); // 0 - 30
 
+  String _avatarUrl;
   String _fullName;
   String _description;
+
+  String _retrieveImageDataError;
 
   @override
   void initState() {
     super.initState();
+    _avatarUrl = widget.activity.avatarUrl;
     _fullName = widget.activity.fullName;
     _description = widget.activity.description;
   }
@@ -62,6 +68,30 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Divider(
+                    height: 20,
+                    color: Colors.transparent,
+                  ),
+                  InkWell(
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.blueGrey,
+                      backgroundImage: Activity.getImage(_avatarUrl),
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            color: Colors.white,
+                            height: 120,
+                            child: _buildBottomNavigationMenu(),
+                          );
+                        },
+                        backgroundColor: Colors.white,
+                      );
+                    },
+                  ),
                   Divider(
                     height: 20,
                     color: Colors.transparent,
@@ -132,6 +162,8 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                   if (!widget.readOnly) Divider(height: 10, color: Colors.transparent,),
                   if (!widget.readOnly) RaisedButton(
                     color: Colors.blue,
+                    focusElevation: 4,
+                    highlightElevation: 4,
                     child: Text(
                       "SAVE",
                       semanticsLabel: "Save button",
@@ -140,14 +172,16 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                         letterSpacing: 1,
                       ),
                     ),
-                    shape: RoundedRectangleBorder(borderRadius: ButtonRadius),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: ButtonRadius,
+                    ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
                         Navigator.pop(
                           context,
                           Activity(
-                            avatarUrl: "",
+                            avatarUrl: _avatarUrl,
                             fullName: _fullName,
                             when: DateTime.now().toUtc(),
                             description: _description,
@@ -163,6 +197,66 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future _getImage(ImageSource imageSource) async {
+    var image = await ImagePicker.pickImage(source: imageSource);
+
+    if (image?.path != null && image.path.isNotEmpty) {
+      setState(() {
+        _avatarUrl = image.path;
+      });
+    }
+  }
+
+  Future<void> _retrieveLostImageData() async {
+    final response = await ImagePicker.retrieveLostData();
+
+    if (response.isEmpty) {
+      return;
+    }
+
+    if (response.file != null) {
+      if (response.type == RetrieveType.image) {
+        setState(() {
+          _avatarUrl = response.file.path;
+        });
+      }
+    } else {
+      _retrieveImageDataError = response.exception.code;
+    }
+  }
+
+  Text _getRetrieveErrorWidget() {
+    if (_retrieveImageDataError != null) {
+      final result = Text(_retrieveImageDataError);
+      _retrieveImageDataError = null;
+      return result;
+    }
+    return null;
+  }
+
+  Column _buildBottomNavigationMenu() {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.photo_camera),
+          title: Text("Take camera photo"),
+          onTap: () {
+            Navigator.pop(context);
+            _getImage(ImageSource.camera);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.photo),
+          title: Text("Select from gallery"),
+          onTap: () {
+            Navigator.pop(context);
+            _getImage(ImageSource.gallery);
+          },
+        ),
+      ],
     );
   }
 }

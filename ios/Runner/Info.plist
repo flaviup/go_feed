@@ -26,6 +26,12 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Used to take avatar picture.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Used to capture audio for avatar image.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Used to pick an avatar image.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

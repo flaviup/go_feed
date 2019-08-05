@@ -59,7 +59,8 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                             padding: EdgeInsets.only(right: 8),
                             child: CircleAvatar(
                               radius: 40,
-                              backgroundImage: NetworkImage(activity.avatarUrl),
+                              backgroundColor: Colors.blueGrey,
+                              backgroundImage: activity.avatarImage,
                             ),
                           ),
                           Expanded(

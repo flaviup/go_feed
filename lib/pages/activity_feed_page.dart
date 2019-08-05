@@ -59,6 +59,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
                 Navigator.of(context)
                     .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
                     .then((v) {
+                  if (v == null || !(v is Activity)) return;
                   final activity = v;
                   if (activity.fullName?.isNotEmpty &&
                       activity.description?.isNotEmpty &&
@@ -87,6 +88,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
     Navigator.of(context)
              .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
              .then((v) {
+      if (v == null || !(v is Activity)) return;
       activity = v;
       if (activity.fullName?.isNotEmpty &&
           activity.description?.isNotEmpty &&
@@ -95,7 +97,5 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
         _activityFeedModel.insert(0, activity);
       }
     });
-
-    //final activity = Activity(avatarUrl: "https://picsum.photos/id/${_activityFeedModel.length}/80", fullName: "John Doe ${_activityFeedModel.length}", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488));
   }
 }
