@@ -59,36 +59,38 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
           ),
         ),
       ),
-      body: Container(
-        child: AnimatedList(
-          key: _listKey,
-          initialItemCount: _activityFeedModel?.length ?? 0,
-          itemBuilder: (context, index, animation) {
-            return ActivityFeedItem(
-              key: UniqueKey(),
-              activity: _activityFeedModel[index],
-              animation: animation,
-              onTap: () {
-                setState(() {
-                  _selectedItem = index;
-                });
-                final activity = _activityFeedModel[index];
-                Navigator.of(context)
-                    .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
-                    .then((v) {
-                  if (v == null || !(v is Activity)) return;
-                  final activity = v;
-                  if (activity.fullName?.isNotEmpty &&
-                      activity.description?.isNotEmpty &&
-                      activity.when != null &&
-                      activity.location != null) {
-                      _activityFeedModel[index] = activity;
-                  }
-                });
-              },
-              selected: _selectedItem == index,
-            );
-          }
+      body: SafeArea(
+        child: Container(
+          child: AnimatedList(
+            key: _listKey,
+            initialItemCount: _activityFeedModel?.length ?? 0,
+            itemBuilder: (context, index, animation) {
+              return ActivityFeedItem(
+                key: UniqueKey(),
+                activity: _activityFeedModel[index],
+                animation: animation,
+                onTap: () {
+                  setState(() {
+                    _selectedItem = index;
+                  });
+                  final activity = _activityFeedModel[index];
+                  Navigator.of(context)
+                      .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
+                      .then((v) {
+                    if (v == null || !(v is Activity)) return;
+                    final activity = v;
+                    if (activity.fullName?.isNotEmpty &&
+                        activity.description?.isNotEmpty &&
+                        activity.when != null &&
+                        activity.location != null) {
+                        _activityFeedModel[index] = activity;
+                    }
+                  });
+                },
+                selected: _selectedItem == index,
+              );
+            }
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
