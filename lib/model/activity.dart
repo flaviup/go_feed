@@ -17,7 +17,7 @@ class Activity {
 
   Activity.fromJson(@required Map<String, dynamic> json)
       : assert(json != null),
-        _id = json["id"],
+        _id = json["id"] ?? Uuid().v4().toString(),
         avatarUrl = json["avatarUrl"],
         fullName = json["fullName"],
         when = DateTime.parse(json["when"]),
