@@ -30,16 +30,18 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
       listKey: _listKey,
       initialActivities: <Activity>[Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488))],
     );*/
-    _activityFeedModel = ActivityFeedModel(listKey: _listKey);
 
     rootBundle.loadString("assets/activities.json").then((text) {
       if (text?.isNotEmpty) {
         if (mounted) {
-          final json = jsonDecode(text);
 
-          setState(() {
-            _activityFeedModel = ActivityFeedModel.fromJson(listKey: _listKey, json: json);
-          });
+          try {
+            final json = jsonDecode(text);
+            setState(() =>
+              _activityFeedModel = ActivityFeedModel.fromJson(listKey: _listKey, json: json));
+          } catch (e) {
+            print(e);
+          }
         }
       }
     });
@@ -60,7 +62,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
       body: Container(
         child: AnimatedList(
           key: _listKey,
-          initialItemCount: _activityFeedModel.length,
+          initialItemCount: _activityFeedModel?.length ?? 0,
           itemBuilder: (context, index, animation) {
             return ActivityFeedItem(
               key: UniqueKey(),

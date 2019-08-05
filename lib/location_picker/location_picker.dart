@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-class LocationPicker{
+class LocationPicker {
 
   static String apiKey = "";
 

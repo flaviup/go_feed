@@ -5,9 +5,8 @@
 			"id": "0a6ed8cd-0174-4419-ba29-02b9f193d623", 
 			"avatarUrl": "https://picsum.photos/id/0/100/100", 
 			"fullName": "John Doe", 
-			"when": 2019-08-05T21:01:51.060840Z, 
-			"description": "Lorem ipsum
-Ipsum lorem", 
+			"when": "2019-08-05T21:01:51.060840Z", 
+			"description": "Lorem ipsum\nIpsum lorem", 
 			"location": [51.5361400330408, -0.2973097935318947], 
 			"address": "Ainslie Court, Vicars Bridge Cl, Wembley HA0 1XD, UK"
 		}, 
@@ -15,7 +14,7 @@ Ipsum lorem",
 			"id": "4ea89d06-1908-479f-8bc9-741f84a2aa79", 
 			"avatarUrl": "https://thispersondoesnotexist.com/image", 
 			"fullName": "John Doe", 
-			"when": 2019-08-05T21:00:28.723082Z, 
+			"when": "2019-08-05T21:00:28.723082Z", 
 			"description": "Description", 
 			"location": [31.7532126, -106.3401488], 
 			"address": "10727 Gateway Blvd W, El Paso, TX 79935, USA"

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_feed/model/activity.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:go_feed/model/activity.dart';
 
 class ActivityFeedItem extends StatefulWidget {
 

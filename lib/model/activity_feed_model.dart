@@ -5,16 +5,24 @@ class ActivityFeedModel {
 
   ActivityFeedModel({@required this.listKey, Iterable<Activity> initialActivities,}) :
         assert(listKey != null),
-        _activities = List<Activity>.from(initialActivities ?? <Activity>[]);
+        _activities = List<Activity>.from(initialActivities ?? <Activity>[]) {
+    _initAnimatedList();
+  }
 
   ActivityFeedModel.fromJson({@required this.listKey, @required Map<String, dynamic> json})
       : assert(listKey != null),
         assert(json != null),
-        _activities = json["activities"];
+        _activities = List<Activity>.from(json["activities"].map((act) => Activity.fromJson(act)).toList()) {
+    _initAnimatedList();
+  }
 
   Map<String, dynamic> toJson() => {
     "activities" : _activities.map((a) => a.toJson()).toList(growable: false),
   };
+
+  void _initAnimatedList() {
+    _activities.reversed.forEach((a) => _animatedList.insertItem(0));
+  }
 
   final GlobalKey<AnimatedListState> listKey;
   final List<Activity> _activities;
