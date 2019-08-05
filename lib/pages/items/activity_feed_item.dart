@@ -95,7 +95,7 @@ class _ActivityFeedItemState extends State<ActivityFeedItem> {
                                   ),
                                 ),
                                 Text(
-                                  TimeAgo.format(activity.when),
+                                  TimeAgo.format(activity.when.toLocal()),
                                   style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 12,

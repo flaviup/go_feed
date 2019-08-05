@@ -25,7 +25,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
 
     _activityFeedModel = ActivityFeedModel(
       listKey: _listKey,
-      initialActivities: <Activity>[Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe", when: DateTime.now(), description: "Description", location: Point<double>(31.7532126, -106.3401488))],
+      initialActivities: <Activity>[Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488))],
     );
   }
 
@@ -45,6 +45,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
           initialItemCount: _activityFeedModel.length,
           itemBuilder: (context, index, animation) {
             return ActivityFeedItem(
+              key: UniqueKey(),
               activity: _activityFeedModel[index],
               animation: animation,
               onTap: () {
@@ -67,7 +68,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
 
   void _addNewActivity() {
     _selectedItem = null;
-    final activity = Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe ${_activityFeedModel.length}", when: DateTime.now(), description: "Description", location: Point<double>(31.7532126, -106.3401488));
+    final activity = Activity(avatarUrl: "https://picsum.photos/id/${_activityFeedModel.length}/80", fullName: "John Doe ${_activityFeedModel.length}", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488));
     _activityFeedModel.insert(0, activity);
   }
 }
