@@ -20,6 +20,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
 
   static final FieldRadius = BorderRadius.circular(10); // 0 - 30
   static final FieldBorder = OutlineInputBorder(gapPadding: 6, borderRadius: FieldRadius);
+  static final ButtonRadius = BorderRadius.circular(20); // 0 - 30
 
   String _fullName;
   String _description;
@@ -104,6 +105,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                 color: Colors.blue,
                 child: Text("Save",
                 ),
+                shape: RoundedRectangleBorder(borderRadius: ButtonRadius),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
