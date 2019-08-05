@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_feed/model/activity.dart';
+import 'package:go_feed/pages/activity_detail_page.dart';
 import 'package:go_feed/pages/items/activity_feed_item.dart';
 import 'package:go_feed/model/activity_feed_model.dart';
 
@@ -33,13 +34,9 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Container(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: AnimatedList(
           key: _listKey,
           initialItemCount: _activityFeedModel.length,
@@ -52,6 +49,18 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
                 setState(() {
                   _selectedItem = index;
                 });
+                final activity = _activityFeedModel[index];
+                Navigator.of(context)
+                    .push(MaterialPageRoute<void>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
+                    .then((v) {
+                  if (activity.fullName?.isNotEmpty &&
+                      activity.description?.isNotEmpty &&
+                      activity.when != null &&
+                      activity.location != null) {
+                    setState(() {
+                    });
+                  }
+                });
               },
               selected: _selectedItem == index,
             );
@@ -59,16 +68,28 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addNewActivity,
+        onPressed: () => _addNewActivity(context),
         tooltip: 'Add new activity',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 
-  void _addNewActivity() {
+  void _addNewActivity(BuildContext context) {
     _selectedItem = null;
-    final activity = Activity(avatarUrl: "https://picsum.photos/id/${_activityFeedModel.length}/80", fullName: "John Doe ${_activityFeedModel.length}", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488));
-    _activityFeedModel.insert(0, activity);
+    var activity = Activity();
+    Navigator.of(context)
+             .push(MaterialPageRoute<Activity>(builder: (_) => ActivityDetailPage(activity: activity, readOnly: false,)))
+             .then((v) {
+      activity = v;
+      if (activity.fullName?.isNotEmpty &&
+          activity.description?.isNotEmpty &&
+          activity.when != null &&
+          activity.location != null) {
+        _activityFeedModel.insert(0, activity);
+      }
+    });
+
+    //final activity = Activity(avatarUrl: "https://picsum.photos/id/${_activityFeedModel.length}/80", fullName: "John Doe ${_activityFeedModel.length}", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488));
   }
 }
