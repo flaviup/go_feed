@@ -265,12 +265,16 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   }
 
   Future _getImage(ImageSource imageSource) async {
-    var image = await ImagePicker.pickImage(source: imageSource);
+    try {
+      var image = await ImagePicker.pickImage(source: imageSource);
 
-    if (image?.path != null && image.path.isNotEmpty) {
-      setState(() {
-        _avatarUrl = image.path;
-      });
+      if (image?.path != null && image.path.isNotEmpty) {
+        setState(() {
+          _avatarUrl = image.path;
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
