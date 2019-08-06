@@ -26,11 +26,6 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
   void initState() {
     super.initState();
 
-    /*_activityFeedModel = ActivityFeedModel(
-      listKey: _listKey,
-      initialActivities: <Activity>[Activity(avatarUrl: "https://thispersondoesnotexist.com/image", fullName: "John Doe", when: DateTime.now().toUtc(), description: "Description", location: Point<double>(31.7532126, -106.3401488))],
-    );*/
-
     rootBundle.loadString("assets/activities.json").then((text) {
       if (text?.isNotEmpty) {
         if (mounted) {

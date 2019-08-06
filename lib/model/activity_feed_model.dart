@@ -21,7 +21,7 @@ class ActivityFeedModel {
   };
 
   void _initAnimatedList() {
-    _activities.reversed.forEach((a) => _animatedList.insertItem(0));
+    _activities.reversed.forEach((a) => _animatedList?.insertItem(0));
   }
 
   final GlobalKey<AnimatedListState> listKey;
