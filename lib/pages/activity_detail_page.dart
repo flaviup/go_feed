@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show PlatformException;
 import 'package:image_picker/image_picker.dart';
 import 'package:go_feed/model/activity.dart';
-import 'package:go_feed/location_picker/location_picker.dart';
+import 'package:go_feed/pages/mixins/image_picker_mixin.dart';
+import 'package:go_feed/pages/mixins/location_picker_mixin.dart';
+import 'package:go_feed/pages/widgets/go_button.dart';
 
 class ActivityDetailPage extends StatefulWidget {
 
@@ -18,28 +19,22 @@ class ActivityDetailPage extends StatefulWidget {
   _ActivityDetailPageState createState() => _ActivityDetailPageState();
 }
 
-class _ActivityDetailPageState extends State<ActivityDetailPage> {
+class _ActivityDetailPageState extends State<ActivityDetailPage> with ImagePickerMixin, LocationPickerMixin {
   final _formKey = GlobalKey<FormState>();
 
   static final FieldRadius = BorderRadius.circular(10); // 0 - 30
   static final FieldBorder = OutlineInputBorder(gapPadding: 6, borderRadius: FieldRadius);
-  static final ButtonRadius = BorderRadius.circular(20); // 0 - 30
 
-  String _avatarUrl;
   String _fullName;
   String _description;
-  String _address;
-
-  String _retrieveImageDataError;
-  Map<dynamic, dynamic> _locationData;
 
   @override
   void initState() {
     super.initState();
-    _avatarUrl = widget.activity.avatarUrl;
     _fullName = widget.activity.fullName;
     _description = widget.activity.description;
-    _address = widget.activity.address;
+    avatarUrl = widget.activity.avatarUrl;
+    address = widget.activity.address;
   }
 
   @override
@@ -87,7 +82,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                             child: CircleAvatar(
                               radius: 40,
                               backgroundColor: Colors.blueGrey,
-                              backgroundImage: Activity.getImage(_avatarUrl),
+                              backgroundImage: Activity.getImage(avatarUrl),
                             ),
                           ),
                           onTap: () {
@@ -113,26 +108,14 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              if (!widget.readOnly) RaisedButton(
-                                color: Colors.blue,
-                                focusElevation: 4,
-                                highlightElevation: 4,
-                                child: Text(
-                                  "PICK LOCATION",
-                                  semanticsLabel: "Pick location button",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: ButtonRadius,
-                                ),
-                                onPressed: _showLocationPicker,
+                              if (!widget.readOnly) GoButton(
+                                text: "PICK LOCATION",
+                                semanticsLabel: "Pick location button",
+                                onPressed: () => showLocationPicker(activity.location),
                               ),
-                              if (_address?.isNotEmpty) Text(
-                                _address,
-                                semanticsLabel: "Location ${_address}",
+                              if (address?.isNotEmpty) Text(
+                                address,
+                                semanticsLabel: "Location ${address}",
                                 style: TextStyle(
                                   color: Colors.blueGrey,
                                   fontSize: 14,
@@ -217,21 +200,9 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                       ),
                     ),
                     if (!widget.readOnly) Divider(height: 10, color: Colors.transparent,),
-                    if (!widget.readOnly) RaisedButton(
-                      color: Colors.blue,
-                      focusElevation: 4,
-                      highlightElevation: 4,
-                      child: Text(
-                        "SAVE",
-                        semanticsLabel: "Save button",
-                        style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: ButtonRadius,
-                      ),
+                    if (!widget.readOnly) GoButton(
+                      text: "SAVE",
+                      semanticsLabel: "Save button",
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
@@ -239,16 +210,16 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                             context,
                             Activity(
                               id: activity.id,
-                              avatarUrl: _avatarUrl,
+                              avatarUrl: avatarUrl,
                               fullName: _fullName,
                               when: DateTime.now().toUtc(),
                               description: _description,
-                              location: (_locationData != null &&
-                                         _locationData.containsKey("latitude") &&
-                                         _locationData.containsKey("longitude")) ?
-                                          Point(_locationData["latitude"], _locationData["longitude"]) :
+                              location: (locationData != null &&
+                                         locationData.containsKey("latitude") &&
+                                         locationData.containsKey("longitude")) ?
+                                          Point(locationData["latitude"], locationData["longitude"]) :
                                           activity.location,
-                              address: _address,
+                              address: address,
                             ),
                           );
                         }
@@ -264,47 +235,6 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     );
   }
 
-  Future _getImage(ImageSource imageSource) async {
-    try {
-      var image = await ImagePicker.pickImage(source: imageSource);
-
-      if (image?.path != null && image.path.isNotEmpty) {
-        setState(() {
-          _avatarUrl = image.path;
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _retrieveLostImageData() async {
-    final response = await ImagePicker.retrieveLostData();
-
-    if (response.isEmpty) {
-      return;
-    }
-
-    if (response.file != null) {
-      if (response.type == RetrieveType.image) {
-        setState(() {
-          _avatarUrl = response.file.path;
-        });
-      }
-    } else {
-      _retrieveImageDataError = response.exception.code;
-    }
-  }
-
-  Text _getRetrieveErrorWidget() {
-    if (_retrieveImageDataError != null) {
-      final result = Text(_retrieveImageDataError);
-      _retrieveImageDataError = null;
-      return result;
-    }
-    return null;
-  }
-
   Column _buildBottomNavigationMenu() {
     return Column(
       children: <Widget>[
@@ -313,7 +243,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
           title: Text("Take camera photo"),
           onTap: () {
             Navigator.pop(context);
-            _getImage(ImageSource.camera);
+            getImage(ImageSource.camera);
           },
         ),
         ListTile(
@@ -321,35 +251,10 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
           title: Text("Select from gallery"),
           onTap: () {
             Navigator.pop(context);
-            _getImage(ImageSource.gallery);
+            getImage(ImageSource.gallery);
           },
         ),
       ],
     );
-  }
-
-  void _showLocationPicker() async {
-    final initLocation = widget.activity.location;
-    final picker = LocationPicker(
-      initialLat: initLocation?.x ?? 0,
-      initialLong: initLocation?.y ?? 0,
-    );
-    Map<dynamic, dynamic> result = null;
-
-    try {
-      result = await picker.showLocationPicker;
-    } on PlatformException {
-    }
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted || result == null)
-      return;
-
-    setState(() {
-      _locationData = result;
-
-      if (result.containsKey("line0")) _address = result["line0"];
-    });
   }
 }

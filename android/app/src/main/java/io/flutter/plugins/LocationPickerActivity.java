@@ -315,7 +315,12 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 }
 
                 finish();
-                LocationPickerPlugin.result.success(response);
+
+                try {
+                    LocationPickerPlugin.result.success(response);
+                } catch (Exception e) {
+                    Log.e("PLUGIN ERROR", e.getMessage());
+                }
             }
         });
     }
