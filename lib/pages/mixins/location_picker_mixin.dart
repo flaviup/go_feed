@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
-import 'package:image_picker/image_picker.dart';
 import 'package:go_feed/location_picker/location_picker.dart';
 
 mixin LocationPickerMixin<T extends StatefulWidget> on State<T> {
